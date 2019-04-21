@@ -1,7 +1,7 @@
 ﻿using BepInEx;
 
 namespace UnmoddedClients {
-    [BepInPlugin("com.viseyth.ror2.unmoddedclients", "UnmoddedClient", "1.0.0")]
+    [BepInPlugin("com.viseyth.ror2.unmoddedclients", "UnmoddedClients", "1.0.0")]
     public class UnmoddedClients : BaseUnityPlugin {
         private void Awake() {
             On.RoR2.SteamworksLobbyManager.OnLobbyChanged += orig => {

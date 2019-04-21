@@ -11,6 +11,9 @@
       <Reference Include="BepInEx, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\inc\BepInEx.dll</HintPath>
       </Reference>
+      <Reference Include="Facepunch.Steamworks, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\inc\Facepunch.Steamworks.dll</HintPath>
+      </Reference>
       <Reference Include="MMHOOK_Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\inc\MMHOOK_Assembly-CSharp.dll</HintPath>
       </Reference>
