@@ -28,7 +28,7 @@ using RoR2;
 using UnityEngine;
 
 namespace UnmoddedClients {
-    [BepInPlugin("com.viseyth.ror2.unmoddedclients", "UnmoddedClients", "1.1.0")]
+    [BepInPlugin("com.viseyth.ror2.unmoddedclients", "UnmoddedClients", "1.1.2")]
     public class UnmoddedClients : BaseUnityPlugin
     {
         private static string _buildId;
@@ -50,20 +50,29 @@ namespace UnmoddedClients {
                 , "The preset Build-Id for the server at launch. Use mod, for modded"
                 + ", or steam for the real id. You can set any other value to set your server buildid to that value, too."
                 , "steam");
-            
-            switch (_buildIdPreset.Value)
+
+            On.RoR2.Networking.GameNetworkManager.CreateP2PConnectionWithPeer += (orig, self, peer) =>
             {
-                case "mod":
-                    SetBuildIdMod(new ConCommandArgs());
-                    break;
-                case "steam":
-                    SetBuildIdSteam(new ConCommandArgs());
-                    break;
-                default:
-                    _buildId = _buildIdPreset.Value;
-                    break;
-            }
-                
+                RoR2Application.instance.steamworksClient.Lobby.CurrentLobbyData.SetData("build_id", _buildId);
+                orig(self, peer);
+            };
+            
+            On.RoR2.RoR2Application.Awake += (orig, self) =>
+            {
+                orig(self);
+                switch (_buildIdPreset.Value)
+                {
+                    case "mod":
+                        SetBuildIdMod(new ConCommandArgs());
+                        break;
+                    case "steam":
+                        SetBuildIdSteam(new ConCommandArgs());
+                        break;
+                    default:
+                        _buildId = _buildIdPreset.Value;
+                        break;
+                }
+            };
         }
         
         // ReSharper disable UnusedMember.Local UnusedParameter.Local
@@ -71,6 +80,15 @@ namespace UnmoddedClients {
         private static void SetBuildIdMod(ConCommandArgs args)
         {
             _buildId = "MOD";
+            
+            var instance = RoR2Application.instance;
+            if (instance == null)
+                throw new ConCommandException("RoR2Application is null.");
+            var client = instance.steamworksClient;
+            if (client == null)
+                throw new ConCommandException("SteamworksClient is null");
+            
+            client.Lobby?.CurrentLobbyData?.SetData("build_id", _buildId);
             Debug.Log($"BuildId set to {_buildId}");
         }
         [ConCommand(commandName = "build_id_steam", flags = ConVarFlags.SenderMustBeServer, helpText = "Sets buildid to the steam build id, as if your client was unmodded.")]
@@ -84,6 +102,7 @@ namespace UnmoddedClients {
                 throw new ConCommandException("SteamworksClient is null");
             
             _buildId = TextSerialization.ToStringInvariant(client.BuildId);
+            client.Lobby?.CurrentLobbyData?.SetData("build_id", _buildId);
             Debug.Log($"BuildId set to {_buildId}");
         }
         [ConCommand(commandName = "build_id_custom", flags = ConVarFlags.SenderMustBeServer, helpText = "Sets the buildid to a custom value. One argument.")]
@@ -91,6 +110,15 @@ namespace UnmoddedClients {
         {
             args.CheckArgumentCount(1);
             _buildId = args[0];
+            
+            var instance = RoR2Application.instance;
+            if (instance == null)
+                throw new ConCommandException("RoR2Application is null.");
+            var client = instance.steamworksClient;
+            if (client == null)
+                throw new ConCommandException("SteamworksClient is null");
+
+            client.Lobby?.CurrentLobbyData?.SetData("build_id", _buildId);
             Debug.Log($"BuildId set to {_buildId}");
         }
         // ReSharper restore UnusedMember.Local UnusedParameter.Local

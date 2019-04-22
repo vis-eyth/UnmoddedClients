@@ -20,4 +20,4 @@ Set your standard buildid to whatever you prefer:
 
 ---
 
-##### PLEASE NOTE: This is _still_ very experimental, and I'd love to hear feedback.
+##### PLEASE NOTE: This is _still_ very experimental, and I'd love to hear feedback. I'm on the [modding discord](https://discord.gg/hMdjd9y "Risk of Rain 2 Modding") - my handle is viseyth#3934.
